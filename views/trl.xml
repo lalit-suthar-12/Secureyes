@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	<record id="view_form_travel" model="ir.ui.view">
+		<field name="name">Travel Form view</field>
+		<field name="model">travel.customer</field>
+		<field name="arch" type="xml">
+			<form string="Travel">
+				<header>
+					<field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,progress,requested,closed"/>
+						<button name="action_progress" string="Submit" type="object" state="draft" class="oe_highlight"/>
+						<button name="action_requested" string="Request" type="object" state="progress" class="oe_highlight"/>
+						<button name="action_closed" string="Close" type="object" state="draft.progress,requested"/>
+						<button name="action_draft" string="Reset To Draft" type="object" state="closed"/>
+				</header>
+				<sheet>
+					<group>
+						<group>
+							<field name="name"/>
+							<field name="manager_name"/>
+							<field name="job_role"/>
+							<field name="train_name"/>
+							<field name="department"/>
+							<field name="departure"/>
+							<field name="destination"/>
+							<field name="date_of_birth"/>
+							<field name="age"/>
+							<field name="currency_id"/>
+							<field name="salary"/>
+							<field name="fees" widget="monetary"/>
+
+						</group>
+						<group>
+							<field name="employee_gender"/>
+							<field name="number_of_days"/>
+							<field name="train_number"/>
+							<field name="arrival_date"/>
+							<field name="return_date"/>
+							<field name="responsible_id"/>
+							<field name="tags_ids" widget="many2many_tags"/>
+							<field name="is_intern"/>
+							<field name="future_date"/>
+							<field name="note"/>
+							<field name="company_id" groups="base.group_multi_company"/>
+						</group>
+					</group>
+					<notebook>
+						<page string="Prescription">
+							<group>
+								<field name="prescription" placeholder="Enter your prescription here"/>
+							</group>
+						</page>
+						<page string="Task">
+							<field name="one2many_ids">
+								<tree editable="top">
+									<field name="task"/>
+									<field name="percentage"/>
+								</tree>
+								<form>
+									<group>
+										<group>
+											<field name="task"/>
+										</group>
+										<group>
+											<field name="percentage"/>
+										</group>
+									</group>
+								</form>
+							</field>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="view_tree_travel" model="ir.ui.view">
+		<field name="name">Travel Tree</field>
+		<field name="model">travel.customer</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="manager_name"/>
+				<field name="employee_gender"/>
+				<field name="department"/>
+				<field name="number_of_days"/>
+				<field name="is_intern"/>
+				<field name="responsible_id"/>
+				<field name="state" string="Status"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="view_graph_travel" model="ir.ui.view">
+		<field name="name">Travel graph</field>
+		<field name="model">travel.customer</field>
+		<field name="arch" type="xml">
+			<graph string="Number of days graph">
+				<field name="name" type="row"/>
+				<field name="arrival_date" type="col" interval="month"/>
+			</graph>
+		</field>
+	</record>
+
+	<record id="view_travel_kanban" model="ir.ui.view">
+		<field name="name">Travel kanban</field>
+		<field name="model">travel.customer</field>
+		<field name="arch" type="xml">
+			<kanban class="o_kanban_mobile">
+				<field name="name"/>
+				<field name="manager_name"/>
+				<field name="employee_gender"/>
+				<field name="department"/>
+				<field name="state" string="Status"/>
+				<templates>
+					<t t-name="kanban-box">
+						<div t-attf-class="oe_kanban_global_click">
+							<div class="o_kanban_image">
+								<img alt="Avatar"
+									 t-att-src="kanban_image('res.users', 'image_128')"/>
+							</div>
+							<div class="oe_kanban_details d-flex flex-column">
+								<strong>
+									<field name="name"/>
+								</strong>
+								<ul>
+									<li>
+										Manager Name:<field name="manager_name"/>
+									</li>
+									<li>
+										Employee Gender:<field name="employee_gender"/>
+									</li>
+									<li>
+										Department:<field name="department"/>
+									</li>
+									<li>
+										Number of Days:<field name="number_of_days"/>
+									</li>
+									<li>
+										Is Intern:<field name="is_intern"/>
+									</li>
+
+								</ul>
+							</div>
+						</div>
+					</t>
+				</templates>
+			</kanban>
+		</field>
+	</record>
+
+	<record id="view_search_travel" model="ir.ui.view">
+        <field name="name">Travel search</field>
+        <field name="model">travel.customer</field>
+        <field name="arch" type="xml">
+            <search>
+               <field name="name"/>
+				<field name="manager_name"/>
+				<field name="employee_gender"/>
+				<field name="number_of_days"/>
+				<field name="department"/>
+                <filter string="Male" name="filter_male" domain="[('employee_gender','=','male')]"/>
+                <filter string="Female" name="filter_female" domain="[('employee_gender','=','female')]"/>
+				<separator/>
+                <filter string="Is Intern" name="filter_is_intern" domain="[('is_intern','=','1')]"/>
+                <separator/>
+                <filter string="IT" name="filter_it" domain="[('department','=','it')]"/>
+                <filter string="HR" name="filter_hr" domain="[('department','=','hr')]"/>
+                <filter string="Purchase" name="filter_purchase" domain="[('department','=','purchase')]"/>
+                <filter string="Sale" name="filter_sale" domain="[('department','=','sale')]"/>
+
+				<group expand="0" string="Group By">
+					<filter string="Employee Gender" name="group_by_employee_gender" context="{'group_by':'employee_gender'}"/>
+					<filter string="Department" name="group_by_department" context="{'group_by':'department'}"/>
+					<filter string="Employees" name="group_by_name" context="{'group_by':'name'}"/>
+					<filter string="Status" name="group_by_state" context="{'group_by':'state'}"/>
+				</group>
+            </search>
+        </field>
+    </record>
+
+	<record id="view_graph_travel" model="ir.ui.view">
+		<field name="name">Travel graph</field>
+		<field name="model">travel.customer</field>
+		<field name="arch" type="xml">
+			<graph string="Number of days graph">
+				<field name="name"/>
+				<field name="number_of_days"/>
+			</graph>
+		</field>
+	</record>
+
+	<record id="view_form_travel1" model="ir.ui.view">
+		<field name="name">Travel form1</field>
+		<field name="model">travel.customer2</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<group>
+							<field name="first_name"/>
+							<field name="second_name"/>
+						</group>
+						<group>
+							<field name="employee_image"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="view_tree_travel1" model="ir.ui.view">
+		<field name="name">Travel Tree1</field>
+		<field name="model">travel.customer2</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="first_name"/>
+				<field name="second_name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_travel" model="ir.actions.act_window">
+		<field name="name">Employee Travel Request</field>
+		<field name="res_model">travel.customer</field>
+		<field name="view_mode">tree,form,kanban,graph,pivot</field>
+		<field name="context">{'search_default_group_by_name':1}</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Create the first request</p>
+		</field>
+	</record>
+
+	<record id="action_travel_all" model="ir.actions.act_window">
+		<field name="name">All Requests</field>
+		<field name="res_model">travel.customer</field>
+		<field name="view_mode">tree,form,kanban,graph,pivot</field>
+		<field name="context">{'search_default_group_by_employee_gender':1}</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Create the first request</p>
+		</field>
+	</record>
+
+	<record id="action_travel_male" model="ir.actions.act_window">
+		<field name="name">Male Requests</field>
+		<field name="res_model">travel.customer</field>
+		<field name="view_mode">tree,form,kanban,graph,pivot</field>
+		<field name="domain">[('employee_gender', '=', 'male')]</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Create the first request</p>
+		</field>
+	</record>
+
+	<record id="action_travel_female" model="ir.actions.act_window">
+		<field name="name">Female Requests</field>
+		<field name="res_model">travel.customer</field>
+		<field name="view_mode">tree,form,kanban,graph,pivot</field>
+		<field name="domain">[('employee_gender', '=', 'female')]</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Create the first request</p>
+		</field>
+	</record>
+
+	<record id="action_travel_employees" model="ir.actions.act_window">
+		<field name="name">Employees</field>
+		<field name="res_model">travel.customer2</field>
+		<field name="view_mode">tree,form,kanban,graph,pivot</field>
+		<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Create the first request</p>
+		</field>
+	</record>
+
+    <menuitem id="menu_travel"
+		name="Travel Management"
+		action="action_travel"/>
+	<menuitem id="menu_travel_request" name="Requests" parent="menu_travel">
+		<menuitem id="menu_travel_male" name="Male" action="action_travel_male"/>
+		<menuitem id="menu_travel_female" name="Female" action="action_travel_female"/>
+		<menuitem id="menu_travel_all" name="All" action="action_travel_all"/>
+	</menuitem>
+	<menuitem id="travel_menu2" name="Employees" parent="menu_travel" action="action_travel_employees"/>
+	<menuitem id="travel_trip_menu2" name="Plan Trip" parent="travel_menu2" action="action_create_trip"/>
+	</data>
+</odoo>

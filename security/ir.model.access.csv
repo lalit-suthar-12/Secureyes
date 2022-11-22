@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+id1,User,model_travel_customer,"",1,1,1,1
+id2,User 1,model_travel_customer1,"",1,1,1,1
+id3,User 2,model_travel_customer2,"",1,1,1,1
+id4,User 3,model_create_trip_wizard,"",1,1,1,1
